@@ -1,0 +1,11 @@
+http://www.custommapmakers.org/skyboxes.php
+Rename:
+	front = south:
+	left = west:
+	back = north:
+	right = east:
+	up = up: rotate counterclockwise 90 deg
+	down = down: rotate clockwise 90 degrees
+
+http://www.redsorceress.com/skybox.html
+	No bottom texture
