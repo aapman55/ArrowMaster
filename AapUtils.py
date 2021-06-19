@@ -14,6 +14,7 @@
 ##                                                                      ##
 ##                                                                      ##
 ##########################################################################
+from pathlib import PurePath
 
 import PIL.Image
 from OpenGL.GL import *
@@ -320,7 +321,7 @@ class Model:
     ###################################################################
     @staticmethod
     def loadModel(folder, filename):
-        path = folder + "/" + filename        
+        path = PurePath(folder, filename)       
         m = Model()
         currentMTL = ""
         mtlpath = ""
@@ -329,7 +330,7 @@ class Model:
             for line_raw in f:   
                 line = line_raw.strip()     
                 splitted_line = line.split(" ")
-                
+
                 if line.startswith("mtllib "):
                     mtlpath = splitted_line[1]
                     try:
@@ -444,51 +445,55 @@ class Materialm:
     ###################################################################
     @staticmethod
     def loadMTL(folder, filename):
-        path = folder + "/" + filename
+        path = PurePath(folder, filename)
         mtllist = dict()
-        data = open(path)
-        lines = data.read().splitlines()
-        data.close()
+        # data = open(path)
+        # lines = data.read().splitlines()
+        # data.close()
 
         currentMTL = ""
         adjust = 1
-        for a in range(len(lines)):
-            line = lines[a]
-            if line.startswith("newmtl"):
-                currentMTL = line.split(" ")[1]
-                mtllist[currentMTL] = Materialm(currentMTL)
-            elif line.startswith("Ns ") and len(currentMTL) > 0:
-                mtllist[currentMTL].shininess = float(line.split(" ")[1])
-            elif line.startswith("Ka ") and len(currentMTL) > 0:
-                Kax = float(line.split(" ")[1])
-                Kay = float(line.split(" ")[2])
-                Kaz = float(line.split(" ")[3])
-                mtllist[currentMTL].ambient = Vector3f(
-                    Kax * adjust, Kay * adjust, Kaz * adjust
-                )
-            elif line.startswith("Kd ") and len(currentMTL) > 0:
-                Kdx = float(line.split(" ")[1])
-                Kdy = float(line.split(" ")[2])
-                Kdz = float(line.split(" ")[3])
-                mtllist[currentMTL].diffuse = Vector3f(
-                    Kdx * adjust, Kdy * adjust, Kdz * adjust
-                )
-            elif line.startswith("Ks ") and len(currentMTL) > 0:
-                Ksx = float(line.split(" ")[1])
-                Ksy = float(line.split(" ")[2])
-                Ksz = float(line.split(" ")[3])
-                mtllist[currentMTL].specular = Vector3f(
-                    Ksx * adjust, Ksy * adjust, Ksz * adjust
-                )
-            elif line.startswith("d ") and len(currentMTL) > 0:
-                mtllist[currentMTL].alpha = float(line.split(" ")[1])
-            elif line.startswith("map_Kd ") and len(currentMTL) > 0:
-                try:
-                    mtllist[currentMTL].tex = Texture.loadFromFile(
-                        folder + "/" + line.split(" ")[1]
+
+        with open(path) as f:
+            for line_raw in f:
+                line = line_raw.strip()
+                splitted_line = line.split(" ")
+
+                if line.startswith("newmtl"):
+                    currentMTL = splitted_line[1]
+                    mtllist[currentMTL] = Materialm(currentMTL)
+                elif line.startswith("Ns ") and len(currentMTL) > 0:
+                    mtllist[currentMTL].shininess = float(splitted_line[1])
+                elif line.startswith("Ka ") and len(currentMTL) > 0:
+                    Kax = float(splitted_line[1])
+                    Kay = float(splitted_line[2])
+                    Kaz = float(splitted_line[3])
+                    mtllist[currentMTL].ambient = Vector3f(
+                        Kax * adjust, Kay * adjust, Kaz * adjust
                     )
-                except:
-                    print("hier")
+                elif line.startswith("Kd ") and len(currentMTL) > 0:
+                    Kdx = float(splitted_line[1])
+                    Kdy = float(splitted_line[2])
+                    Kdz = float(splitted_line[3])
+                    mtllist[currentMTL].diffuse = Vector3f(
+                        Kdx * adjust, Kdy * adjust, Kdz * adjust
+                    )
+                elif line.startswith("Ks ") and len(currentMTL) > 0:
+                    Ksx = float(splitted_line[1])
+                    Ksy = float(splitted_line[2])
+                    Ksz = float(splitted_line[3])
+                    mtllist[currentMTL].specular = Vector3f(
+                        Ksx * adjust, Ksy * adjust, Ksz * adjust
+                    )
+                elif line.startswith("d ") and len(currentMTL) > 0:
+                    mtllist[currentMTL].alpha = float(splitted_line[1])
+                elif line.startswith("map_Kd ") and len(currentMTL) > 0:
+                    try:
+                        mtllist[currentMTL].tex = Texture.loadFromFile(
+                            folder + "/" + splitted_line[1]
+                        )
+                    except:
+                        print("hier")
         return mtllist
 
     ###################################################################
