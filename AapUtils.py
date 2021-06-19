@@ -821,7 +821,10 @@ class Vector3f:
         self.z = z
 
     def __str__(self):
-        return "<" + str(self.x) + "," + str(self.y) + "," + str(self.z) + ">"
+        return f"<{self.x} , {str(self.y)} , {str(self.z)}>"
+    
+    def __repr__(self):
+        return self.__str__()
 
 
 class Vector2f:
@@ -830,4 +833,7 @@ class Vector2f:
         self.y = y
 
     def __str__(self):
-        return "<" + str(self.x) + "," + str(self.y) + ">"
+        return f"<{self.x} , {str(self.y)}>"
+    
+    def __repr__(self):
+        return self.__str__()
