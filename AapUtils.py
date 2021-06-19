@@ -321,14 +321,14 @@ class Model:
     ###################################################################
     @staticmethod
     def loadModel(folder, filename):
-        path = PurePath(folder, filename)       
+        path = PurePath(folder, filename)
         m = Model()
         currentMTL = ""
         mtlpath = ""
 
         with open(path) as f:
-            for line_raw in f:   
-                line = line_raw.strip()     
+            for line_raw in f:
+                line = line_raw.strip()
                 splitted_line = line.split(" ")
 
                 if line.startswith("mtllib "):
@@ -822,7 +822,7 @@ class Vector3f:
 
     def __str__(self):
         return f"<{self.x} , {str(self.y)} , {str(self.z)}>"
-    
+
     def __repr__(self):
         return self.__str__()
 
@@ -834,6 +834,6 @@ class Vector2f:
 
     def __str__(self):
         return f"<{self.x} , {str(self.y)}>"
-    
+
     def __repr__(self):
         return self.__str__()
