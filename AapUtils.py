@@ -429,7 +429,7 @@ class Materialm:
                 try:
                    mtllist[currentMTL].tex = Texture.loadFromFile(folder+'/'+line.split(' ')[1])
                 except:
-                    print 'hier'
+                    print('hier')
         return mtllist
     ###################################################################
     #
@@ -568,7 +568,7 @@ class Button:
             else:
                 self.font.drawString(self.text,self.fontsize, self.x, self.y,1,1,1)
         except:
-            print 'here'
+            print('here')
         backto3D()
 
     @staticmethod
@@ -653,8 +653,8 @@ class Mouse:
     def setGrabbed(boolean):
         if(boolean):
             Mouse.grabbed = True
-            Mouse.x = glutGet(GLUT_WINDOW_WIDTH)/2
-            Mouse.y = glutGet(GLUT_WINDOW_HEIGHT)/2
+            Mouse.x = int(glutGet(GLUT_WINDOW_WIDTH)/2)
+            Mouse.y = int(glutGet(GLUT_WINDOW_HEIGHT)/2)
             glutWarpPointer(Mouse.x, Mouse.y)
             glutSetCursor(GLUT_CURSOR_NONE)
 
@@ -678,7 +678,7 @@ class Mouse:
                 
     @staticmethod
     def warp():
-        glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2)
+        glutWarpPointer(int(glutGet(GLUT_WINDOW_WIDTH)/2), int(glutGet(GLUT_WINDOW_HEIGHT)/2))
 class Keyboard:
     keypressed = [False]*256
     keyhold = [False]*256

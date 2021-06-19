@@ -111,7 +111,8 @@ def drawMenu():
         if(buttondown==5):
             with open('highscore.high','w') as f:
                 f.write(str(highScore))
-            sys.exit()
+            # sys.exit()
+            glutLeaveMainLoop()
     elif(Mouse.leftdown):        
         menutekstnum = 0
     # Draw tekst
@@ -223,6 +224,8 @@ def drawGame():                                            # ondraw is called al
             Mouse.setGrabbed(False)
     
     glutSwapBuffers()                                  # important for double buffering
+
+    
 def updateGame():
     global player, upacc, upvelo, jump, currentTime, gamestate, \
            roundnr, board1, power, horAngle, verAngle, arrow
@@ -234,7 +237,7 @@ def updateGame():
     if(Keyboard.keypressed[Keyboard.KEY_SPACE] and (arrow.grounded or arrow.hitboard)):  
         newRound()
         Keyboard.keypressed[Keyboard.KEY_SPACE] = False
-        print roundnr
+        print(roundnr)
     if(Keyboard.keypressed[Keyboard.KEY_ESC]):        
         gamestate=1
         Mouse.setGrabbed(False)
@@ -335,7 +338,7 @@ def initGL():
     glLight( GL_LIGHT0, GL_DIFFUSE, [1,1,1,1]);
     
 # initialization
-glutInit()                                             # initialize glut
+glutInit(1, "ArrowMaster")                                             # initialize glut
 
 glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
 glutInitWindowSize(width, height)                      # set window size
@@ -348,7 +351,8 @@ glutKeyboardUpFunc(Keyboard.keyup);
 glutSpecialFunc(specialkeys);
 glutPassiveMotionFunc(Mouse.mousemove);
 glutMouseFunc(Mouse.mousefunc)
-glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2)
+glutWarpPointer(int(glutGet(GLUT_WINDOW_WIDTH)/2), int(glutGet(GLUT_WINDOW_HEIGHT)/2))
+print(f"{glutGet(GLUT_WINDOW_WIDTH)/2 = } , {glutGet(GLUT_WINDOW_HEIGHT)/2 = }")
 currentTime = glutGet(GLUT_ELAPSED_TIME)
 initGL()
 # read highscore file
@@ -357,7 +361,7 @@ try:
     highScore = int(f.readline().rstrip('\n'))
     f.close()
 except:
-    print 'file not found, will be created upon exit'
+    print('file not found, will be created upon exit')
 # load texture
 sand = Texture.loadFromFile('./resources/textures/sand.jpg')
 up = Texture.loadFromFile('./resources/skybox/sky/up.png')
@@ -394,3 +398,4 @@ arrow = Arrow(3,1,0,0,cube)
 powerbar = Statusbar(500,650,300,30,3)
 # start everything
 glutMainLoop()                                         
+glutDestroyWindow(window)
