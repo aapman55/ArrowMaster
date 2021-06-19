@@ -320,62 +320,62 @@ class Model:
     ###################################################################
     @staticmethod
     def loadModel(folder, filename):
-        path = folder + "/" + filename
-        data = open(path, "r")
+        path = folder + "/" + filename        
         m = Model()
         currentMTL = ""
-        lines = data.read().splitlines()
-        data.close()
         mtlpath = ""
 
-        for a in range(len(lines)):
-            line = lines[a]
-            if line.startswith("mtllib "):
-                mtlpath = line.split(" ")[1]
-                try:
-                    m.mtl = Materialm.loadMTL(folder, mtlpath)
-                except:
-                    pass
-            elif line.startswith("v "):
-                x = float(line.split(" ")[1])
-                y = float(line.split(" ")[2])
-                z = float(line.split(" ")[3])
-                m.vertices.append(Vector3f(x, y, z))
-            elif line.startswith("vn "):
-                x = float(line.split(" ")[1])
-                y = float(line.split(" ")[2])
-                z = float(line.split(" ")[3])
-                m.normals.append(Vector3f(x, y, z))
-            elif line.startswith("vt "):
-                x = float(line.split(" ")[1])
-                y = float(line.split(" ")[2])
-                m.texcoords.append(Vector2f(x, y))
-            elif line.startswith("usemtl "):
-                currentMTL = line.split(" ")[1]
-            elif line.startswith("f "):
-                # couple the vertices
-                vx = int(line.split(" ")[1].split("/")[0]) - 1
-                vy = int(line.split(" ")[2].split("/")[0]) - 1
-                vz = int(line.split(" ")[3].split("/")[0]) - 1
-                vertexIndices = Vector3f(vx, vy, vz)
-                # couple the texcoordinates
-                textureIndices = []
-                try:
-                    tx = int(line.split(" ")[1].split("/")[1]) - 1
-                    ty = int(line.split(" ")[2].split("/")[1]) - 1
-                    tz = int(line.split(" ")[3].split("/")[1]) - 1
-                    textureIndices = Vector3f(tx, ty, tz)
-                except:
-                    pass
-                # couple normals
-                nx = int(line.split(" ")[1].split("/")[2]) - 1
-                ny = int(line.split(" ")[2].split("/")[2]) - 1
-                nz = int(line.split(" ")[3].split("/")[2]) - 1
-                normalIndices = Vector3f(nx, ny, nz)
+        with open(path) as f:
+            for line_raw in f:   
+                line = line_raw.strip()     
+                splitted_line = line.split(" ")
+                
+                if line.startswith("mtllib "):
+                    mtlpath = splitted_line[1]
+                    try:
+                        m.mtl = Materialm.loadMTL(folder, mtlpath)
+                    except:
+                        pass
+                elif line.startswith("v "):
+                    x = float(splitted_line[1])
+                    y = float(splitted_line[2])
+                    z = float(splitted_line[3])
+                    m.vertices.append(Vector3f(x, y, z))
+                elif line.startswith("vn "):
+                    x = float(splitted_line[1])
+                    y = float(splitted_line[2])
+                    z = float(splitted_line[3])
+                    m.normals.append(Vector3f(x, y, z))
+                elif line.startswith("vt "):
+                    x = float(splitted_line[1])
+                    y = float(splitted_line[2])
+                    m.texcoords.append(Vector2f(x, y))
+                elif line.startswith("usemtl "):
+                    currentMTL = splitted_line[1]
+                elif line.startswith("f "):
+                    # couple the vertices
+                    vx = int(splitted_line[1].split("/")[0]) - 1
+                    vy = int(splitted_line[2].split("/")[0]) - 1
+                    vz = int(splitted_line[3].split("/")[0]) - 1
+                    vertexIndices = Vector3f(vx, vy, vz)
+                    # couple the texcoordinates
+                    textureIndices = []
+                    try:
+                        tx = int(splitted_line[1].split("/")[1]) - 1
+                        ty = int(splitted_line[2].split("/")[1]) - 1
+                        tz = int(splitted_line[3].split("/")[1]) - 1
+                        textureIndices = Vector3f(tx, ty, tz)
+                    except:
+                        pass
+                    # couple normals
+                    nx = int(splitted_line[1].split("/")[2]) - 1
+                    ny = int(splitted_line[2].split("/")[2]) - 1
+                    nz = int(splitted_line[3].split("/")[2]) - 1
+                    normalIndices = Vector3f(nx, ny, nz)
 
-                m.faces.append(
-                    Face(vertexIndices, normalIndices, textureIndices, currentMTL)
-                )
+                    m.faces.append(
+                        Face(vertexIndices, normalIndices, textureIndices, currentMTL)
+                    )
 
         return m
 
