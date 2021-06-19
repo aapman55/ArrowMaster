@@ -98,7 +98,6 @@ class Texture:
 ###################################################################
 class Skybox:
 
-    skybox = 0
     ###################################################################
     #   @param
     #   top     - Texture object for the top of the box
@@ -116,111 +115,113 @@ class Skybox:
         self.front = front
         self.back = back
 
+        self.init_skybox_as_gl_list()
+
+    def init_skybox_as_gl_list(self):
+        self.skybox = glGenLists(1)
+        glNewList(self.skybox, GL_COMPILE)
+
+        # Enable/Disable features
+        glPushAttrib(GL_ENABLE_BIT)
+        glEnable(GL_TEXTURE_2D)
+
+        glDisable(GL_DEPTH_TEST)
+        glDisable(GL_LIGHTING)
+        glDisable(GL_BLEND)
+
+        smallnumber = 0.002
+        # Just in case we set all vertices to white.
+        glColor4f(1, 1, 1, 1)
+
+        # Render the front quad
+        self.front.bind()
+        glBegin(GL_QUADS)
+        glTexCoord2f(0 + smallnumber, 0 + smallnumber)
+        glVertex3f(0.5, -0.5, -0.5)
+        glTexCoord2f(0 + smallnumber, 1 - smallnumber)
+        glVertex3f(0.5, 0.5, -0.5)
+        glTexCoord2f(1 - smallnumber, 1 - smallnumber)
+        glVertex3f(-0.5, 0.5, -0.5)
+        glTexCoord2f(1 - smallnumber, 0 + smallnumber)
+        glVertex3f(-0.5, -0.5, -0.5)
+        glEnd()
+
+        # Render the left quad
+        self.left.bind()
+        glBegin(GL_QUADS)
+        glTexCoord2f(0 + smallnumber, 1 - smallnumber)
+        glVertex3f(0.5, 0.5, 0.5)
+        glTexCoord2f(1 - smallnumber, 1 - smallnumber)
+        glVertex3f(0.5, 0.5, -0.5)
+        glTexCoord2f(1 - smallnumber, 0 + smallnumber)
+        glVertex3f(0.5, -0.5, -0.5)
+        glTexCoord2f(0 + smallnumber, 0 + smallnumber)
+        glVertex3f(0.5, -0.5, 0.5)
+        glEnd()
+
+        # Render the back quad
+        self.back.bind()
+        glBegin(GL_QUADS)
+        glTexCoord2f(0 + smallnumber, 0 + smallnumber)
+        glVertex3f(-0.5, -0.5, 0.5)
+        glTexCoord2f(0 + smallnumber, 1 - smallnumber)
+        glVertex3f(-0.5, 0.5, 0.5)
+        glTexCoord2f(1 - smallnumber, 1 - smallnumber)
+        glVertex3f(0.5, 0.5, 0.5)
+        glTexCoord2f(1 - smallnumber, 0 + smallnumber)
+        glVertex3f(0.5, -0.5, 0.5)
+        glEnd()
+
+        # Render the right quad
+        self.right.bind()
+        glBegin(GL_QUADS)
+        glTexCoord2f(0 + smallnumber, 0 + smallnumber)
+        glVertex3f(-0.5, -0.5, -0.5)
+        glTexCoord2f(0 + smallnumber, 1 - smallnumber)
+        glVertex3f(-0.5, 0.5, -0.5)
+        glTexCoord2f(1 - smallnumber, 1 - smallnumber)
+        glVertex3f(-0.5, 0.5, 0.5)
+        glTexCoord2f(1 - smallnumber, 0 + smallnumber)
+        glVertex3f(-0.5, -0.5, 0.5)
+        glEnd()
+
+        # Render the top quad
+        self.top.bind()
+        glBegin(GL_QUADS)
+        glTexCoord2f(1 - smallnumber, 0 + smallnumber)
+        glVertex3f(-0.5, 0.5, -0.5)
+        glTexCoord2f(0 + smallnumber, 0 + smallnumber)
+        glVertex3f(0.5, 0.5, -0.5)
+        glTexCoord2f(0 + smallnumber, 1 - smallnumber)
+        glVertex3f(0.5, 0.5, 0.5)
+        glTexCoord2f(1 - smallnumber, 1 - smallnumber)
+        glVertex3f(-0.5, 0.5, 0.5)
+        glEnd()
+
+        # Render the bottom quad
+        self.bottom.bind()
+        glBegin(GL_QUADS)
+        glTexCoord2f(0 + smallnumber, 0 + smallnumber)
+        glVertex3f(0.5, -0.5, 0.5)
+        glTexCoord2f(0 + smallnumber, 1 - smallnumber)
+        glVertex3f(0.5, -0.5, -0.5)
+        glTexCoord2f(1 - smallnumber, 1 - smallnumber)
+        glVertex3f(-0.5, -0.5, -0.5)
+        glTexCoord2f(1 - smallnumber, 0 + smallnumber)
+        glVertex3f(-0.5, -0.5, 0.5)
+        glEnd()
+
+        # Restore enable bits and matrix
+        glPopAttrib()
+        glEndList()
+
     def draw(self):
         ###################################################################
         #
         #   Draw the skybox. First time running this will generate the DL
         #
         ###################################################################
-        if self.skybox == 0:
-            self.skybox = glGenLists(1)
-            glNewList(self.skybox, GL_COMPILE)
-
-            # Enable/Disable features
-            glPushAttrib(GL_ENABLE_BIT)
-            glEnable(GL_TEXTURE_2D)
-
-            glDisable(GL_DEPTH_TEST)
-            glDisable(GL_LIGHTING)
-            glDisable(GL_BLEND)
-
-            smallnumber = 0.002
-            # Just in case we set all vertices to white.
-            glColor4f(1, 1, 1, 1)
-
-            # Render the front quad
-            self.front.bind()
-            glBegin(GL_QUADS)
-            glTexCoord2f(0 + smallnumber, 0 + smallnumber)
-            glVertex3f(0.5, -0.5, -0.5)
-            glTexCoord2f(0 + smallnumber, 1 - smallnumber)
-            glVertex3f(0.5, 0.5, -0.5)
-            glTexCoord2f(1 - smallnumber, 1 - smallnumber)
-            glVertex3f(-0.5, 0.5, -0.5)
-            glTexCoord2f(1 - smallnumber, 0 + smallnumber)
-            glVertex3f(-0.5, -0.5, -0.5)
-            glEnd()
-
-            # Render the left quad
-            self.left.bind()
-            glBegin(GL_QUADS)
-            glTexCoord2f(0 + smallnumber, 1 - smallnumber)
-            glVertex3f(0.5, 0.5, 0.5)
-            glTexCoord2f(1 - smallnumber, 1 - smallnumber)
-            glVertex3f(0.5, 0.5, -0.5)
-            glTexCoord2f(1 - smallnumber, 0 + smallnumber)
-            glVertex3f(0.5, -0.5, -0.5)
-            glTexCoord2f(0 + smallnumber, 0 + smallnumber)
-            glVertex3f(0.5, -0.5, 0.5)
-            glEnd()
-
-            # Render the back quad
-            self.back.bind()
-            glBegin(GL_QUADS)
-            glTexCoord2f(0 + smallnumber, 0 + smallnumber)
-            glVertex3f(-0.5, -0.5, 0.5)
-            glTexCoord2f(0 + smallnumber, 1 - smallnumber)
-            glVertex3f(-0.5, 0.5, 0.5)
-            glTexCoord2f(1 - smallnumber, 1 - smallnumber)
-            glVertex3f(0.5, 0.5, 0.5)
-            glTexCoord2f(1 - smallnumber, 0 + smallnumber)
-            glVertex3f(0.5, -0.5, 0.5)
-            glEnd()
-
-            # Render the right quad
-            self.right.bind()
-            glBegin(GL_QUADS)
-            glTexCoord2f(0 + smallnumber, 0 + smallnumber)
-            glVertex3f(-0.5, -0.5, -0.5)
-            glTexCoord2f(0 + smallnumber, 1 - smallnumber)
-            glVertex3f(-0.5, 0.5, -0.5)
-            glTexCoord2f(1 - smallnumber, 1 - smallnumber)
-            glVertex3f(-0.5, 0.5, 0.5)
-            glTexCoord2f(1 - smallnumber, 0 + smallnumber)
-            glVertex3f(-0.5, -0.5, 0.5)
-            glEnd()
-
-            # Render the top quad
-            self.top.bind()
-            glBegin(GL_QUADS)
-            glTexCoord2f(1 - smallnumber, 0 + smallnumber)
-            glVertex3f(-0.5, 0.5, -0.5)
-            glTexCoord2f(0 + smallnumber, 0 + smallnumber)
-            glVertex3f(0.5, 0.5, -0.5)
-            glTexCoord2f(0 + smallnumber, 1 - smallnumber)
-            glVertex3f(0.5, 0.5, 0.5)
-            glTexCoord2f(1 - smallnumber, 1 - smallnumber)
-            glVertex3f(-0.5, 0.5, 0.5)
-            glEnd()
-
-            # Render the bottom quad
-            self.bottom.bind()
-            glBegin(GL_QUADS)
-            glTexCoord2f(0 + smallnumber, 0 + smallnumber)
-            glVertex3f(0.5, -0.5, 0.5)
-            glTexCoord2f(0 + smallnumber, 1 - smallnumber)
-            glVertex3f(0.5, -0.5, -0.5)
-            glTexCoord2f(1 - smallnumber, 1 - smallnumber)
-            glVertex3f(-0.5, -0.5, -0.5)
-            glTexCoord2f(1 - smallnumber, 0 + smallnumber)
-            glVertex3f(-0.5, -0.5, 0.5)
-            glEnd()
-
-            # Restore enable bits and matrix
-            glPopAttrib()
-            glEndList()
-        else:
-            glCallList(self.skybox)
+        glCallList(self.skybox)
 
 
 ###################################################################
