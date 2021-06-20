@@ -686,6 +686,8 @@ class Statusbar:
 
     def draw(self, percentagefull):
         changeto2D()
+
+        # Draw the contour of the statusbar
         glLineWidth(self.borderwidth)
         glColor3f(0, 0, 0)
         glBegin(GL_LINE_LOOP)
@@ -694,6 +696,8 @@ class Statusbar:
         glVertex2f(self.x + self.width, self.y + self.height)
         glVertex2f(self.x + self.width, self.y)
         glEnd()
+
+        # Draw the progress of the statusbar
         glColor3f(self.red, self.green, self.blue)
         glBegin(GL_QUADS)
         glVertex2f(self.x + self.borderwidth / 2.0, self.y + self.borderwidth / 2.0)
