@@ -175,7 +175,9 @@ def drawGame():  # ondraw is called all the time
     glRotatef(-verAngle, 1, 0, 0)
     glRotatef(horAngle, 0, 1, 0)
     skybox.draw()
-    if follow:
+
+    # When follow is activated and the arrow is launched. Set the drone camera behind the arrow.
+    if follow and arrow.launched:
         glTranslatef(
             (arrow.dist - 4) * sin(radians(arrow.horAngle)),
             -arrow.height + 0.5,

@@ -250,9 +250,7 @@ class Model:
         glEnable(GL_BLEND)
 
         # Draw all faces
-        for a in range(len(self.faces)):
-
-            face = self.faces[a]
+        for face in self.faces:
 
             if not (str(face.mtl) == str(currentMTL)):
                 try:
