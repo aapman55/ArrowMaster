@@ -91,12 +91,12 @@ def drawMenu():
     glColor3f(0, 0, 0)
     draw_rect(0, 650, 1280, b1.height)
     backto3D()
-    for a in range(len(buttonlist)):
+    for button in buttonlist:
         if buttondown == 0:
-            buttondown = buttonlist[a].isButton()
+            buttondown = button.isButton()
         else:
-            buttonlist[a].isButton()
-        buttonlist[a].draw()
+            button.isButton()
+        button.draw()
 
     # update mouselocation for the buttons
     Button.mouselocX = Mouse.x
